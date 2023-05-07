@@ -1,10 +1,9 @@
 import turtle
 import random
-import time
 
-drawing_board = turtle.Screen()
-drawing_board.bgcolor("light blue")
-drawing_board.title("Catch The Turtle")
+screen = turtle.Screen()
+screen.bgcolor("light blue")
+screen.title("Catch The Turtle")
 
 turtle_instance = turtle.Turtle()
 turtle_instance.color("green")
@@ -13,10 +12,10 @@ turtle_instance.hideturtle()
 turtle_instance.shape("turtle")
 turtle_instance.shapesize(2)
 
-hidden_turtle = turtle.Turtle()
-hidden_turtle.hideturtle()
-hidden_turtle.penup()
-hidden_turtle.setposition(0, 300)
+time_turtle = turtle.Turtle()
+time_turtle.hideturtle()
+time_turtle.penup()
+time_turtle.setposition(0, 300)
 
 hidden_turtle2 = turtle.Turtle()
 hidden_turtle2.hideturtle()
@@ -28,26 +27,43 @@ clicks = 0
 t = 20
 
 hidden_turtle2.write(arg=f'score:{clicks}', move=False, align='center', font=("arial", 20, "normal"))
-def clicking(x, y)  :
+
+
+def clicking(x, y):
     global clicks
     hidden_turtle2.clear()
     clicks = clicks + 1
     hidden_turtle2.write(arg=f'score:{clicks}', move=False, align='center', font=("arial", 20, "normal"))
 
+
 turtle_instance.onclick(clicking)
 
-while t > 0:
+
+def turtle_instance_move():
     turtle_instance.hideturtle()
-    hidden_turtle.write(arg=f"time:{int(t)}", move=False, align='center', font=("arial", 30, "normal"))
     turtle_instance.setposition(random.randint(-299, 299), random.randint(-299, 299))
     turtle_instance.showturtle()
-    time.sleep(0.6)
-    t -= 0.6
-    hidden_turtle.clear()
+    screen.update()
+    if t > 0:
+        screen.ontimer(turtle_instance_move, 600)
+    else:
+        turtle_instance.hideturtle()
 
-turtle_instance.hideturtle()
-turtle_instance.setposition(random.randint(-299, 299), random.randint(-299, 299))
 
-hidden_turtle.write(arg="Game Over !!", move=False, align='center', font=("arial", 30, "normal"))
+def time_turtle_move():
+    global t
+    t -= 1
+    time_turtle.clear()
+    time_turtle.write(arg=f"time:{int(t)}", move=False, align='center', font=("arial", 30, "normal"))
+    if t > 0:
+        screen.ontimer(time_turtle_move, 1000)
+    else:
+        time_turtle.clear()
+        time_turtle.write(arg="Game Over !!", move=False, align='center', font=("arial", 30, "normal"))
+
+
+turtle_instance_move()
+time_turtle_move()
+
 
 turtle.mainloop()
